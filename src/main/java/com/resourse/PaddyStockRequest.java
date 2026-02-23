@@ -6,7 +6,7 @@ import lombok.Data;
 public class PaddyStockRequest {
     private String paddyType;
     private int quantity;
-    private Number bags;
+    private int bags;
     private double moistureLevel;
     private double pricePerKg;
     private String customerName;

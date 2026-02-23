@@ -10,7 +10,7 @@ public class RiceSaleRequest {
     private String customerName;
     private String customerId;
     private String mobileNumber;
-    private Number bags;
+    private int bags;
     private double totalamount;
     private String date;
     private String user;

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PaddyRepository extends JpaRepository<PaddyStock, Long> {
-    @Query("SELECT p FROM PaddyStock p WHERE p.paddyType = :paddyType ORDER BY p.id DESC")
+    @Query("SELECT p FROM PaddyStock p WHERE p.paddyType = :paddyType ORDER BY p.id DESC LIMIT 1")
     Optional<PaddyStock> findFirstByPaddyTypeOrderByIdDesc(@Param("paddyType") String paddyType);
     
     @Query("SELECT SUM(p.quantity) FROM PaddyStock p")

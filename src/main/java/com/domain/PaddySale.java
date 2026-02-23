@@ -16,7 +16,7 @@ public class PaddySale {
     @Column(nullable = false)
     private int quantity;
     @Column
-    private Number bags;
+    private int bags;
     @Column(nullable = false)
     private double pricePerKg;
     @Column(nullable = false)

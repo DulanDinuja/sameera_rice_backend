@@ -26,7 +26,7 @@ public class RiceStockBackup {
     @Column
     private String mobileNumber;
     @Column
-    private Number bags;
+    private int bags;
     @Column
     private String status;
     @Column

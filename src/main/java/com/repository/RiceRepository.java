@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RiceRepository extends JpaRepository<RiceStock, Long> {
-    @Query("SELECT r FROM RiceStock r WHERE r.riceType = :riceType ORDER BY r.id DESC")
+    @Query("SELECT r FROM RiceStock r WHERE r.riceType = :riceType ORDER BY r.id DESC LIMIT 1")
     Optional<RiceStock> findFirstByRiceTypeOrderByIdDesc(@Param("riceType") String riceType);
     
     @Query("SELECT SUM(r.quantity) FROM RiceStock r")

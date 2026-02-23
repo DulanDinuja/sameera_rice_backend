@@ -16,7 +16,7 @@ public class PaddyStock {
     @Column(nullable = false)
     private int quantity;
     @Column
-    private Number bags;
+    private int bags;
     @Column
     private double moistureLevel;
     @Column(nullable = false)

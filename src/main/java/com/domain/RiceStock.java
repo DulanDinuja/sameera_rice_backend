@@ -24,7 +24,7 @@ public class RiceStock {
     @Column (nullable = false)
     private String mobileNumber;
     @Column
-    private Number bags;
+    private int bags;
     @Column
     private String status;
     @Column

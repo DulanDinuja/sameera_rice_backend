@@ -18,7 +18,7 @@ public class PaddyStockBackup {
     @Column
     private int quantity;
     @Column
-    private Number bags;
+    private int bags;
     @Column
     private double moistureLevel;
     @Column
