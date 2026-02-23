@@ -31,7 +31,7 @@ public class RiceServiceImpl implements RiceService {
             riceStock.setMobileNumber(request.getMobileNumber());
             riceStock.setBags(request.getBags());
             riceStock.setStatus(request.getStatus());
-            riceStock.setTotalamount(request.getTotalamount());
+            riceStock.setTotalAmount(request.getTotalamount());
             riceStock.setDate(request.getDate());
             riceStock.setUser(request.getUser());
             
@@ -53,7 +53,7 @@ public class RiceServiceImpl implements RiceService {
             riceSale.setCustomerId(request.getCustomerId());
             riceSale.setMobileNumber(request.getMobileNumber());
             riceSale.setBags(request.getBags());
-            riceSale.setTotalamount(request.getTotalamount());
+            riceSale.setTotalAmount(request.getTotalamount());
             riceSale.setDate(request.getDate());
             riceSale.setUser(request.getUser());
             
