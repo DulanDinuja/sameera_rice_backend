@@ -24,10 +24,46 @@ public class RiceController {
         
     }
 
+    @PutMapping("/addstock/{id}")
+    public ResponseEntity<String> updateStock(@PathVariable Long id, @RequestBody RiceStockRequest request) {
+        String result = riceService.updateRiceStock(id, request);
+        if (result.equals("Rice stock updated successfully")) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("/addstock/{id}")
+    public ResponseEntity<String> deleteStock(@PathVariable Long id) {
+        String result = riceService.deleteRiceStock(id);
+        if (result.equals("Rice stock deleted successfully")) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
     @PostMapping("/ricesale")
     public ResponseEntity<String> addSale(@RequestBody RiceSaleRequest request){
         String result = riceService.addRiceSale(request);
         if (result.equals("Rice sale added successfully")) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @PutMapping("/ricesale/{id}")
+    public ResponseEntity<String> updateSale(@PathVariable Long id, @RequestBody RiceSaleRequest request) {
+        String result = riceService.updateRiceSale(id, request);
+        if (result.equals("Rice sale updated successfully")) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("/ricesale/{id}")
+    public ResponseEntity<String> deleteSale(@PathVariable Long id) {
+        String result = riceService.deleteRiceSale(id);
+        if (result.equals("Rice sale deleted successfully")) {
             return ResponseEntity.ok(result);
         }
         return ResponseEntity.badRequest().body(result);
