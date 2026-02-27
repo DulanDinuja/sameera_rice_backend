@@ -11,6 +11,7 @@ import com.repository.RiceSaleBackupRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import com.resourse.RiceSaleRequest;
 import com.resourse.RiceStockRequest;
@@ -44,7 +45,8 @@ public class RiceServiceImpl implements RiceService {
             riceStock.setCustomerId(request.getCustomerId());
             riceStock.setMobileNumber(request.getMobileNumber());
             riceStock.setBags(request.getBags());
-            riceStock.setStatus(request.getStatus());
+            riceStock.setStatus("addstock");
+            riceStock.setNote(null);
             riceStock.setTotalAmount(request.getTotalamount());
             riceStock.setDate(request.getDate());
             riceStock.setUser(request.getUser());
@@ -76,6 +78,7 @@ public class RiceServiceImpl implements RiceService {
             backup.setMobileNumber(riceStock.getMobileNumber());
             backup.setBags(riceStock.getBags());
             backup.setStatus(riceStock.getStatus());
+            backup.setNote(riceStock.getNote());
             backup.setTotalAmount(riceStock.getTotalAmount());
             backup.setDate(riceStock.getDate());
             backup.setUser(riceStock.getUser());
@@ -90,7 +93,8 @@ public class RiceServiceImpl implements RiceService {
             riceStock.setCustomerId(request.getCustomerId());
             riceStock.setMobileNumber(request.getMobileNumber());
             riceStock.setBags(request.getBags());
-            riceStock.setStatus(request.getStatus());
+            riceStock.setStatus("U-addstock");
+            riceStock.setNote(request.getNote());
             riceStock.setTotalAmount(request.getTotalamount());
             riceStock.setDate(request.getDate());
             riceStock.setUser(request.getUser());
@@ -122,6 +126,7 @@ public class RiceServiceImpl implements RiceService {
             backup.setMobileNumber(riceStock.getMobileNumber());
             backup.setBags(riceStock.getBags());
             backup.setStatus(riceStock.getStatus());
+            backup.setNote(riceStock.getNote());
             backup.setTotalAmount(riceStock.getTotalAmount());
             backup.setDate(riceStock.getDate());
             backup.setUser(riceStock.getUser());
@@ -147,9 +152,11 @@ public class RiceServiceImpl implements RiceService {
             riceSale.setCustomerId(request.getCustomerId());
             riceSale.setMobileNumber(request.getMobileNumber());
             riceSale.setBags(request.getBags());
+            riceSale.setStatus(null);
+            riceSale.setNote(null);
             riceSale.setTotalAmount(request.getTotalamount());
             riceSale.setDate(request.getDate());
-            riceSale.setUser(request.getUser());
+            riceSale.setUser("sale");
             
             riceSaleRepository.save(riceSale);
             return "Rice sale added successfully";
@@ -177,6 +184,8 @@ public class RiceServiceImpl implements RiceService {
             backup.setCustomerId(riceSale.getCustomerId());
             backup.setMobileNumber(riceSale.getMobileNumber());
             backup.setBags(riceSale.getBags());
+            backup.setStatus(riceSale.getStatus());
+            backup.setNote(riceSale.getNote());
             backup.setTotalAmount(riceSale.getTotalAmount());
             backup.setDate(riceSale.getDate());
             backup.setUser(riceSale.getUser());
@@ -191,9 +200,11 @@ public class RiceServiceImpl implements RiceService {
             riceSale.setCustomerId(request.getCustomerId());
             riceSale.setMobileNumber(request.getMobileNumber());
             riceSale.setBags(request.getBags());
+            riceSale.setStatus(request.getStatus());
+            riceSale.setNote(request.getNote());
             riceSale.setTotalAmount(request.getTotalamount());
             riceSale.setDate(request.getDate());
-            riceSale.setUser(request.getUser());
+            riceSale.setUser("U-sale");
             
             riceSaleRepository.save(riceSale);
             return "Rice sale updated successfully";
@@ -221,6 +232,8 @@ public class RiceServiceImpl implements RiceService {
             backup.setCustomerId(riceSale.getCustomerId());
             backup.setMobileNumber(riceSale.getMobileNumber());
             backup.setBags(riceSale.getBags());
+            backup.setStatus(riceSale.getStatus());
+            backup.setNote(riceSale.getNote());
             backup.setTotalAmount(riceSale.getTotalAmount());
             backup.setDate(riceSale.getDate());
             backup.setUser(riceSale.getUser());
@@ -233,5 +246,25 @@ public class RiceServiceImpl implements RiceService {
         } catch (Exception e) {
             return "Failed to delete rice sale: " + e.getMessage();
         }
+    }
+
+    @Override
+    public List<RiceStock> getAllRiceStock() {
+        return riceRepository.findAll();
+    }
+
+    @Override
+    public RiceStock getRiceStockById(Long id) {
+        return riceRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<RiceSale> getAllRiceSales() {
+        return riceSaleRepository.findAll();
+    }
+
+    @Override
+    public RiceSale getRiceSaleById(Long id) {
+        return riceSaleRepository.findById(id).orElse(null);
     }
 }

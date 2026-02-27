@@ -26,7 +26,11 @@ public class RiceSaleBackup {
     @Column
     private String mobileNumber;
     @Column
-    private int bags;
+    private Integer bags;
+    @Column
+    private String status;
+    @Column
+    private String note;
     @Column
     private double totalAmount;
     @Column

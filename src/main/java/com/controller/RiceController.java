@@ -1,5 +1,7 @@
 package com.controller;
 
+import com.domain.RiceSale;
+import com.domain.RiceStock;
 import com.resourse.RiceSaleRequest;
 import com.resourse.RiceStockRequest;
 import com.service.RiceService;
@@ -8,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/rice")
 @CrossOrigin(origins = "*")
@@ -15,6 +19,31 @@ public class RiceController {
 
     @Autowired
     private RiceService riceService;
+    @GetMapping("/addstock")
+    public ResponseEntity<?> getAllRiceStock() {
+        try {
+            List<RiceStock> stocks = riceService.getAllRiceStock();
+            return ResponseEntity.ok(stocks);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/addstock/{id}")
+    public ResponseEntity<RiceStock> getRiceStockById(@PathVariable Long id) {
+        try {
+            RiceStock stock = riceService.getRiceStockById(id);
+            if (stock != null) {
+                return ResponseEntity.ok(stock);
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     @PostMapping("/addstock")
     public ResponseEntity<String> addStock(@RequestBody RiceStockRequest request){
         try {
@@ -27,6 +56,7 @@ public class RiceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
+
 
     @PutMapping("/addstock/{id}")
     public ResponseEntity<String> updateStock(@PathVariable Long id, @RequestBody RiceStockRequest request) {
@@ -51,6 +81,29 @@ public class RiceController {
             return ResponseEntity.badRequest().body(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/ricesale")
+    public ResponseEntity<List<RiceSale>> getAllRiceSales() {
+        try {
+            List<RiceSale> sales = riceService.getAllRiceSales();
+            return ResponseEntity.ok(sales);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/ricesale/{id}")
+    public ResponseEntity<RiceSale> getRiceSaleById(@PathVariable Long id) {
+        try {
+            RiceSale sale = riceService.getRiceSaleById(id);
+            if (sale != null) {
+                return ResponseEntity.ok(sale);
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 

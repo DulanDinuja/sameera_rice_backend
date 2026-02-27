@@ -1,11 +1,13 @@
 package com.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Table(name = "rice_sale")
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RiceSale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +26,11 @@ public class RiceSale {
     @Column(nullable = false)
     private String mobileNumber;
     @Column
-    private int bags;
+    private Integer bags;
+    @Column
+    private String status;
+    @Column
+    private String note;
     @Column
     private double totalAmount;
     @Column(nullable = false)
