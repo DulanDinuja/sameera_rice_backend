@@ -152,11 +152,11 @@ public class RiceServiceImpl implements RiceService {
             riceSale.setCustomerId(request.getCustomerId());
             riceSale.setMobileNumber(request.getMobileNumber());
             riceSale.setBags(request.getBags());
-            riceSale.setStatus(null);
+            riceSale.setStatus(request.getStatus());
             riceSale.setNote(null);
             riceSale.setTotalAmount(request.getTotalamount());
             riceSale.setDate(request.getDate());
-            riceSale.setUser("sale");
+            riceSale.setUser(request.getUser());
             
             riceSaleRepository.save(riceSale);
             return "Rice sale added successfully";
@@ -204,7 +204,7 @@ public class RiceServiceImpl implements RiceService {
             riceSale.setNote(request.getNote());
             riceSale.setTotalAmount(request.getTotalamount());
             riceSale.setDate(request.getDate());
-            riceSale.setUser("U-sale");
+            riceSale.setUser(request.getUser());
             
             riceSaleRepository.save(riceSale);
             return "Rice sale updated successfully";
