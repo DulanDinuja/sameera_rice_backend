@@ -41,4 +41,6 @@ public class RiceSaleBackup {
     private String backupDate;
     @Column
     private String operation;
+    @Column
+    private String deleteReason;
 }

@@ -2,6 +2,7 @@ package com.controller;
 
 import com.domain.RiceSale;
 import com.domain.RiceStock;
+import com.resourse.DeleteRequest;
 import com.resourse.RiceSaleRequest;
 import com.resourse.RiceStockRequest;
 import com.service.RiceService;
@@ -72,9 +73,10 @@ public class RiceController {
     }
 
     @DeleteMapping("/addstock/{id}")
-    public ResponseEntity<String> deleteStock(@PathVariable Long id) {
+    public ResponseEntity<String> deleteStock(@PathVariable Long id, @RequestBody(required = false) DeleteRequest request) {
         try {
-            String result = riceService.deleteRiceStock(id);
+            String deleteReason = (request != null && request.getDeleteReason() != null) ? request.getDeleteReason() : "";
+            String result = riceService.deleteRiceStock(id, deleteReason);
             if (result.equals("Rice stock deleted successfully")) {
                 return ResponseEntity.ok(result);
             }
@@ -134,9 +136,10 @@ public class RiceController {
     }
 
     @DeleteMapping("/ricesale/{id}")
-    public ResponseEntity<String> deleteSale(@PathVariable Long id) {
+    public ResponseEntity<String> deleteSale(@PathVariable Long id, @RequestBody(required = false) DeleteRequest request) {
         try {
-            String result = riceService.deleteRiceSale(id);
+            String deleteReason = (request != null && request.getDeleteReason() != null) ? request.getDeleteReason() : "";
+            String result = riceService.deleteRiceSale(id, deleteReason);
             if (result.equals("Rice sale deleted successfully")) {
                 return ResponseEntity.ok(result);
             }

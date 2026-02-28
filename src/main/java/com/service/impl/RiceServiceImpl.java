@@ -107,7 +107,7 @@ public class RiceServiceImpl implements RiceService {
     }
 
     @Override
-    public String deleteRiceStock(Long id) {
+    public String deleteRiceStock(Long id, String deleteReason) {
         try {
             Optional<RiceStock> riceStockOpt = riceRepository.findById(id);
             if (!riceStockOpt.isPresent()) {
@@ -132,6 +132,7 @@ public class RiceServiceImpl implements RiceService {
             backup.setUser(riceStock.getUser());
             backup.setBackupDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             backup.setOperation("DELETE");
+            backup.setDeleteReason(deleteReason);
             riceStockBackupRepository.save(backup);
             
             riceRepository.deleteById(id);
@@ -214,7 +215,7 @@ public class RiceServiceImpl implements RiceService {
     }
 
     @Override
-    public String deleteRiceSale(Long id) {
+    public String deleteRiceSale(Long id, String deleteReason) {
         try {
             Optional<RiceSale> riceSaleOpt = riceSaleRepository.findById(id);
             if (!riceSaleOpt.isPresent()) {
@@ -239,6 +240,7 @@ public class RiceServiceImpl implements RiceService {
             backup.setUser(riceSale.getUser());
             backup.setBackupDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             backup.setOperation("DELETE");
+            backup.setDeleteReason(deleteReason);
             riceSaleBackupRepository.save(backup);
             
             riceSaleRepository.deleteById(id);

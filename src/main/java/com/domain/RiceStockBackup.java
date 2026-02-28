@@ -41,4 +41,6 @@ public class RiceStockBackup {
     private String backupDate;
     @Column
     private String operation;
+    @Column
+    private String deleteReason;
 }

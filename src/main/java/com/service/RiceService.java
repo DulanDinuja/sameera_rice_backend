@@ -10,12 +10,12 @@ import java.util.List;
 public interface RiceService {
     String addRicestock(RiceStockRequest riceStockRequest);
     String updateRiceStock(Long id, RiceStockRequest request);
-    String deleteRiceStock(Long id);
+    String deleteRiceStock(Long id, String deleteReason);
     List<RiceStock> getAllRiceStock();
     RiceStock getRiceStockById(Long id);
     String addRiceSale(RiceSaleRequest riceSaleRequest);
     String updateRiceSale(Long id, RiceSaleRequest request);
-    String deleteRiceSale(Long id);
+    String deleteRiceSale(Long id, String deleteReason);
     List<RiceSale> getAllRiceSales();
     RiceSale getRiceSaleById(Long id);
 }
