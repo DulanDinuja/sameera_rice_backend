@@ -164,23 +164,23 @@ public class DashboardServiceImpl implements DashboardService {
         
         activities.sort((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()));
         
-        return activities.size() > 3 ? activities.subList(0, 3) : activities;
+        return activities.size() > 5 ? activities.subList(0, 5) : activities;
     }
 
     @Override
     public List<LowStockAlertDTO> getLowStockAlerts() {
         List<LowStockAlertDTO> alerts = new ArrayList<>();
-        int threshold = 500;
+        int threshold = 10000;
         
         List<RiceStock> lowRiceStocks = riceRepository.findLowStockItems(threshold);
         for (RiceStock stock : lowRiceStocks) {
-            String alertLevel = stock.getQuantity() < 500 ? "Critical" : stock.getQuantity() < 1000 ? "Low" : "Medium";
+            String alertLevel = stock.getQuantity() < 5000 ? "Critical" : "Low";
             alerts.add(new LowStockAlertDTO(stock.getRiceType(), stock.getQuantity(), alertLevel));
         }
         
         List<PaddyStock> lowPaddyStocks = paddyRepository.findLowStockItems(threshold);
         for (PaddyStock stock : lowPaddyStocks) {
-            String alertLevel = stock.getQuantity() < 500 ? "Critical" : stock.getQuantity() < 1000 ? "Low" : "Medium";
+            String alertLevel = stock.getQuantity() < 5000 ? "Critical" : "Low";
             alerts.add(new LowStockAlertDTO(stock.getPaddyType(), stock.getQuantity(), alertLevel));
         }
         
