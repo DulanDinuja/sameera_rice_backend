@@ -294,14 +294,19 @@ public class PaddyServiceImpl implements PaddyService {
                 }
             }
 
-            // Add rice to rice_stock
-            addOrUpdateRiceStock(request.getRiceType(), request.getRiceQuantity(), request.getDate(), request.getUser());
-            
-            // Add broken rice to rice_stock
-            addOrUpdateRiceStock(request.getBrokenRiceType(), request.getBrokenRiceQuantity(), request.getDate(), request.getUser());
-            
-            // Add polish rice to rice_stock
-            addOrUpdateRiceStock(request.getPolishRiceType(), request.getPolishRiceQuantity(), request.getDate(), request.getUser());
+            // Add rice to rice_stock as new record
+            RiceStock riceStock = new RiceStock();
+            riceStock.setRiceType(request.getRiceType());
+            riceStock.setQuantity(request.getRiceQuantity());
+            riceStock.setBrokenRiceQuantity(request.getBrokenRiceQuantity());
+            riceStock.setPolishRiceQuantity(request.getPolishRiceQuantity());
+            riceStock.setPricePerKg(0.0);
+            riceStock.setCustomerName("-");
+            riceStock.setCustomerId("-");
+            riceStock.setMobileNumber("-");
+            riceStock.setDate(request.getDate());
+            riceStock.setUser(request.getUser());
+            riceRepository.save(riceStock);
 
             // Save threshing record
             PaddyThreshing paddyThreshing = new PaddyThreshing();
@@ -413,26 +418,7 @@ public class PaddyServiceImpl implements PaddyService {
         }
     }
 
-    private void addOrUpdateRiceStock(String riceType, int quantity, String date, String user) {
-        Optional<RiceStock> riceStockOpt = riceRepository.findFirstByRiceTypeOrderByIdDesc(riceType);
-        if (riceStockOpt.isPresent()) {
-            RiceStock riceStock = riceStockOpt.get();
-            riceStock.setQuantity(riceStock.getQuantity() + quantity);
-            riceRepository.save(riceStock);
-        } else {
-            RiceStock newRiceStock = new RiceStock();
-            newRiceStock.setRiceType(riceType);
-            newRiceStock.setQuantity(quantity);
-            newRiceStock.setPricePerKg(0.0);
-            newRiceStock.setCustomerName("-");
-            newRiceStock.setCustomerId("-");
-            newRiceStock.setMobileNumber("-");
-            newRiceStock.setStatus(newRiceStock.getStatus());
-            newRiceStock.setDate(date);
-            newRiceStock.setUser(user);
-            riceRepository.save(newRiceStock);
-        }
-    }
+
 
     @Override
     public List<PaddyStock> getAllPaddyStock() {

@@ -17,6 +17,10 @@ public class RiceStock {
     private String riceType;
     @Column (nullable = false)
     private int quantity;
+    @Column
+    private Integer brokenRiceQuantity;
+    @Column
+    private Integer polishRiceQuantity;
     @Column (nullable = false)
     private double pricePerKg;
     @Column (nullable = false)
