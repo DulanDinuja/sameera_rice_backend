@@ -30,7 +30,7 @@ public class PaddyThreshing {
     @Column
     private String warehouse;
     @Column
-    private String notes;
+    private String note;
     @Column
     private String status;
     @Column(nullable = false)

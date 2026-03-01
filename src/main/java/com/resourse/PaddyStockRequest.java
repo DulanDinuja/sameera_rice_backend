@@ -14,6 +14,7 @@ public class PaddyStockRequest {
     private String mobileNumber;
     private String warehouse;
     private String status;
+    private String note;
     private double totalamount;
     private String date;
     private String user;

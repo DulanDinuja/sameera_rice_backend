@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -65,6 +66,7 @@ public class PaddyServiceImpl implements PaddyService {
             paddyStock.setMobileNumber(request.getMobileNumber());
             paddyStock.setWarehouse(request.getWarehouse());
             paddyStock.setStatus(request.getStatus());
+            paddyStock.setNote(request.getNote());
             paddyStock.setTotalamount(request.getTotalamount());
             paddyStock.setDate(request.getDate());
             paddyStock.setUser(request.getUser());
@@ -98,6 +100,7 @@ public class PaddyServiceImpl implements PaddyService {
             backup.setMobileNumber(paddyStock.getMobileNumber());
             backup.setWarehouse(paddyStock.getWarehouse());
             backup.setStatus(paddyStock.getStatus());
+            backup.setNote(paddyStock.getNote());
             backup.setTotalamount(paddyStock.getTotalamount());
             backup.setDate(paddyStock.getDate());
             backup.setUser(paddyStock.getUser());
@@ -115,6 +118,7 @@ public class PaddyServiceImpl implements PaddyService {
             paddyStock.setMobileNumber(request.getMobileNumber());
             paddyStock.setWarehouse(request.getWarehouse());
             paddyStock.setStatus(request.getStatus());
+            paddyStock.setNote(request.getNote());
             paddyStock.setTotalamount(request.getTotalamount());
             paddyStock.setDate(request.getDate());
             paddyStock.setUser(request.getUser());
@@ -127,7 +131,7 @@ public class PaddyServiceImpl implements PaddyService {
     }
 
     @Override
-    public String deletePaddyStock(Long id) {
+    public String deletePaddyStock(Long id, String deleteReason) {
         try {
             Optional<PaddyStock> paddyStockOpt = paddyRepository.findById(id);
             if (!paddyStockOpt.isPresent()) {
@@ -148,11 +152,13 @@ public class PaddyServiceImpl implements PaddyService {
             backup.setMobileNumber(paddyStock.getMobileNumber());
             backup.setWarehouse(paddyStock.getWarehouse());
             backup.setStatus(paddyStock.getStatus());
+            backup.setNote(paddyStock.getNote());
             backup.setTotalamount(paddyStock.getTotalamount());
             backup.setDate(paddyStock.getDate());
             backup.setUser(paddyStock.getUser());
             backup.setBackupDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             backup.setOperation("DELETE");
+            backup.setDeleteReason(deleteReason);
             paddyStockBackupRepository.save(backup);
             
             paddyRepository.deleteById(id);
@@ -175,6 +181,7 @@ public class PaddyServiceImpl implements PaddyService {
             paddySale.setMobileNumber(request.getMobileNumber());
             paddySale.setWarehouse(request.getWarehouse());
             paddySale.setStatus(request.getStatus());
+            paddySale.setNote(request.getNote());
             paddySale.setTotalamount(request.getTotalamount());
             paddySale.setDate(request.getDate());
             paddySale.setUser(request.getUser());
@@ -207,6 +214,7 @@ public class PaddyServiceImpl implements PaddyService {
             backup.setMobileNumber(paddySale.getMobileNumber());
             backup.setWarehouse(paddySale.getWarehouse());
             backup.setStatus(paddySale.getStatus());
+            backup.setNote(paddySale.getNote());
             backup.setTotalamount(paddySale.getTotalamount());
             backup.setDate(paddySale.getDate());
             backup.setUser(paddySale.getUser());
@@ -223,6 +231,7 @@ public class PaddyServiceImpl implements PaddyService {
             paddySale.setMobileNumber(request.getMobileNumber());
             paddySale.setWarehouse(request.getWarehouse());
             paddySale.setStatus(request.getStatus());
+            paddySale.setNote(request.getNote());
             paddySale.setTotalamount(request.getTotalamount());
             paddySale.setDate(request.getDate());
             paddySale.setUser(request.getUser());
@@ -235,7 +244,7 @@ public class PaddyServiceImpl implements PaddyService {
     }
 
     @Override
-    public String deletePaddySale(Long id) {
+    public String deletePaddySale(Long id, String deleteReason) {
         try {
             Optional<PaddySale> paddySaleOpt = paddySaleRepository.findById(id);
             if (!paddySaleOpt.isPresent()) {
@@ -255,11 +264,13 @@ public class PaddyServiceImpl implements PaddyService {
             backup.setMobileNumber(paddySale.getMobileNumber());
             backup.setWarehouse(paddySale.getWarehouse());
             backup.setStatus(paddySale.getStatus());
+            backup.setNote(paddySale.getNote());
             backup.setTotalamount(paddySale.getTotalamount());
             backup.setDate(paddySale.getDate());
             backup.setUser(paddySale.getUser());
             backup.setBackupDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             backup.setOperation("DELETE");
+            backup.setDeleteReason(deleteReason);
             paddySaleBackupRepository.save(backup);
             
             paddySaleRepository.deleteById(id);
@@ -273,17 +284,14 @@ public class PaddyServiceImpl implements PaddyService {
     @Transactional
     public String addPaddyThreshing(PaddyThreshingRequest request) {
         try {
-            // Deduct paddy from paddy_stock
+            // Deduct paddy from paddy_stock (optional - only if stock exists)
             Optional<PaddyStock> paddyStockOpt = paddyRepository.findFirstByPaddyTypeOrderByIdDesc(request.getPaddyType());
             if (paddyStockOpt.isPresent()) {
                 PaddyStock paddyStock = paddyStockOpt.get();
-                if (paddyStock.getQuantity() < request.getPaddyQuantity()) {
-                    return "Insufficient paddy stock";
+                if (paddyStock.getQuantity() >= request.getPaddyQuantity()) {
+                    paddyStock.setQuantity(paddyStock.getQuantity() - request.getPaddyQuantity());
+                    paddyRepository.save(paddyStock);
                 }
-                paddyStock.setQuantity(paddyStock.getQuantity() - request.getPaddyQuantity());
-                paddyRepository.save(paddyStock);
-            } else {
-                return "Paddy stock not found";
             }
 
             // Add rice to rice_stock
@@ -306,7 +314,7 @@ public class PaddyServiceImpl implements PaddyService {
             paddyThreshing.setPolishRiceType(request.getPolishRiceType());
             paddyThreshing.setPolishRiceQuantity(request.getPolishRiceQuantity());
             paddyThreshing.setWarehouse(request.getWarehouse());
-            paddyThreshing.setNotes(request.getNotes());
+            paddyThreshing.setNote(request.getNote());
             paddyThreshing.setStatus(request.getStatus());
             paddyThreshing.setDate(request.getDate());
             paddyThreshing.setUser(request.getUser());
@@ -339,7 +347,7 @@ public class PaddyServiceImpl implements PaddyService {
             backup.setPolishRiceType(paddyThreshing.getPolishRiceType());
             backup.setPolishRiceQuantity(paddyThreshing.getPolishRiceQuantity());
             backup.setWarehouse(paddyThreshing.getWarehouse());
-            backup.setNotes(paddyThreshing.getNotes());
+            backup.setNote(paddyThreshing.getNote());
             backup.setStatus(paddyThreshing.getStatus());
             backup.setDate(paddyThreshing.getDate());
             backup.setUser(paddyThreshing.getUser());
@@ -356,7 +364,7 @@ public class PaddyServiceImpl implements PaddyService {
             paddyThreshing.setPolishRiceType(request.getPolishRiceType());
             paddyThreshing.setPolishRiceQuantity(request.getPolishRiceQuantity());
             paddyThreshing.setWarehouse(request.getWarehouse());
-            paddyThreshing.setNotes(request.getNotes());
+            paddyThreshing.setNote(request.getNote());
             paddyThreshing.setStatus(request.getStatus());
             paddyThreshing.setDate(request.getDate());
             paddyThreshing.setUser(request.getUser());
@@ -369,7 +377,7 @@ public class PaddyServiceImpl implements PaddyService {
     }
 
     @Override
-    public String deletePaddyThreshing(Long id) {
+    public String deletePaddyThreshing(Long id, String deleteReason) {
         try {
             Optional<PaddyThreshing> paddyThreshingOpt = paddyThreshingRepository.findById(id);
             if (!paddyThreshingOpt.isPresent()) {
@@ -389,12 +397,13 @@ public class PaddyServiceImpl implements PaddyService {
             backup.setPolishRiceType(paddyThreshing.getPolishRiceType());
             backup.setPolishRiceQuantity(paddyThreshing.getPolishRiceQuantity());
             backup.setWarehouse(paddyThreshing.getWarehouse());
-            backup.setNotes(paddyThreshing.getNotes());
+            backup.setNote(paddyThreshing.getNote());
             backup.setStatus(paddyThreshing.getStatus());
             backup.setDate(paddyThreshing.getDate());
             backup.setUser(paddyThreshing.getUser());
             backup.setBackupDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             backup.setOperation("DELETE");
+            backup.setDeleteReason(deleteReason);
             paddyThreshingBackupRepository.save(backup);
             
             paddyThreshingRepository.deleteById(id);
@@ -415,13 +424,43 @@ public class PaddyServiceImpl implements PaddyService {
             newRiceStock.setRiceType(riceType);
             newRiceStock.setQuantity(quantity);
             newRiceStock.setPricePerKg(0.0);
-            newRiceStock.setCustomerName("Threshing");
-            newRiceStock.setCustomerId("N/A");
-            newRiceStock.setMobileNumber("N/A");
-            newRiceStock.setStatus("In Stock");
+            newRiceStock.setCustomerName("-");
+            newRiceStock.setCustomerId("-");
+            newRiceStock.setMobileNumber("-");
+            newRiceStock.setStatus(newRiceStock.getStatus());
             newRiceStock.setDate(date);
             newRiceStock.setUser(user);
             riceRepository.save(newRiceStock);
         }
+    }
+
+    @Override
+    public List<PaddyStock> getAllPaddyStock() {
+        return paddyRepository.findAll();
+    }
+
+    @Override
+    public PaddyStock getPaddyStockById(Long id) {
+        return paddyRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<PaddySale> getAllPaddySale() {
+        return paddySaleRepository.findAll();
+    }
+
+    @Override
+    public PaddySale getPaddySaleById(Long id) {
+        return paddySaleRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<PaddyThreshing> getAllPaddyThreshing() {
+        return paddyThreshingRepository.findAll();
+    }
+
+    @Override
+    public PaddyThreshing getPaddyThreshingById(Long id) {
+        return paddyThreshingRepository.findById(id).orElse(null);
     }
 }

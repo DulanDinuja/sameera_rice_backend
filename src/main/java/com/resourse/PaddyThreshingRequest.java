@@ -13,7 +13,7 @@ public class PaddyThreshingRequest {
     private String polishRiceType;
     private int polishRiceQuantity;
     private String warehouse;
-    private String notes;
+    private String note;
     private String status;
     private String date;
     private String user;

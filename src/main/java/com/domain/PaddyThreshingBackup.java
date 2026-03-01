@@ -32,7 +32,7 @@ public class PaddyThreshingBackup {
     @Column
     private String warehouse;
     @Column
-    private String notes;
+    private String note;
     @Column
     private String status;
     @Column
@@ -43,4 +43,6 @@ public class PaddyThreshingBackup {
     private String backupDate;
     @Column
     private String operation;
+    @Column
+    private String deleteReason;
 }

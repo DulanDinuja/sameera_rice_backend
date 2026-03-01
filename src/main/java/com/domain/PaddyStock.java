@@ -32,6 +32,8 @@ public class PaddyStock {
     @Column
     private String status;
     @Column
+    private String note;
+    @Column
     private double totalamount;
     @Column(nullable = false)
     private String date;

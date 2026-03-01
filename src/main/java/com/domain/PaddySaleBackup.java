@@ -32,6 +32,8 @@ public class PaddySaleBackup {
     @Column
     private String status;
     @Column
+    private String note;
+    @Column
     private double totalamount;
     @Column
     private String date;
@@ -41,4 +43,6 @@ public class PaddySaleBackup {
     private String backupDate;
     @Column
     private String operation;
+    @Column
+    private String deleteReason;
 }
