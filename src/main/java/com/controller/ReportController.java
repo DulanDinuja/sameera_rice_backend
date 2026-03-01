@@ -46,4 +46,9 @@ public class ReportController {
     public ResponseEntity<List<String>> getSuppliers() {
         return ResponseEntity.ok(reportService.getSuppliers());
     }
+
+    @GetMapping("/all-system-data")
+    public ResponseEntity<Map<String, Object>> getAllSystemData() {
+        return ResponseEntity.ok(reportService.getAllSystemData());
+    }
 }

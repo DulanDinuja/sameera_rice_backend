@@ -186,4 +186,16 @@ public class DashboardServiceImpl implements DashboardService {
         
         return alerts;
     }
+
+    @Override
+    public Map<String, Object> getBrokenAndPolishRiceQuantity() {
+        Integer brokenRiceQuantity = riceRepository.getTotalBrokenRiceQuantity();
+        Integer polishRiceQuantity = riceRepository.getTotalPolishRiceQuantity();
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("brokenRiceQuantity", brokenRiceQuantity);
+        response.put("polishRiceQuantity", polishRiceQuantity);
+        
+        return response;
+    }
 }

@@ -28,4 +28,10 @@ public interface RiceRepository extends JpaRepository<RiceStock, Long> {
     
     @Query("SELECT DISTINCT r.customerName FROM RiceStock r")
     List<String> findDistinctSuppliers();
+    
+    @Query("SELECT COALESCE(SUM(r.brokenRiceQuantity), 0) FROM RiceStock r")
+    Integer getTotalBrokenRiceQuantity();
+    
+    @Query("SELECT COALESCE(SUM(r.polishRiceQuantity), 0) FROM RiceStock r")
+    Integer getTotalPolishRiceQuantity();
 }

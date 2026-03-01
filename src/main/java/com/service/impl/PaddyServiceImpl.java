@@ -301,9 +301,10 @@ public class PaddyServiceImpl implements PaddyService {
             riceStock.setBrokenRiceQuantity(request.getBrokenRiceQuantity());
             riceStock.setPolishRiceQuantity(request.getPolishRiceQuantity());
             riceStock.setPricePerKg(0.0);
-            riceStock.setCustomerName("-");
-            riceStock.setCustomerId("-");
-            riceStock.setMobileNumber("-");
+            riceStock.setCustomerName("Threshing");
+            riceStock.setCustomerId("N/A");
+            riceStock.setMobileNumber("N/A");
+            riceStock.setTotalAmount(0.0);
             riceStock.setDate(request.getDate());
             riceStock.setUser(request.getUser());
             riceRepository.save(riceStock);

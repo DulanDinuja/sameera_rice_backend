@@ -51,5 +51,10 @@ public class DashBordController {
         return ResponseEntity.ok(dashboardService.getLowStockAlerts());
     }
 
+    @GetMapping("/broken-polish-rice")
+    public ResponseEntity<Map<String, Object>> getBrokenAndPolishRiceQuantity() {
+        return ResponseEntity.ok(dashboardService.getBrokenAndPolishRiceQuantity());
+    }
+
     
 }

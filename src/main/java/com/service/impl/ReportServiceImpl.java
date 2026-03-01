@@ -105,6 +105,7 @@ public class ReportServiceImpl implements ReportService {
             Map<String, Object> map = new HashMap<>();
             map.put("paddyType", s.getPaddyType());
             map.put("quantity", s.getQuantity());
+            map.put("moistureLevel", s.getMoistureLevel());
             map.put("pricePerKg", s.getPricePerKg());
             map.put("totalAmount", s.getTotalamount());
             map.put("supplierName", s.getCustomerName());
@@ -112,6 +113,7 @@ public class ReportServiceImpl implements ReportService {
             map.put("mobileNumber", s.getMobileNumber());
             map.put("warehouse", s.getWarehouse());
             map.put("date", s.getDate());
+            map.put("user", s.getUser());
             return map;
         }).collect(Collectors.toList());
     }
@@ -154,6 +156,7 @@ public class ReportServiceImpl implements ReportService {
             map.put("supplierId", s.getCustomerId());
             map.put("mobileNumber", s.getMobileNumber());
             map.put("date", s.getDate());
+            map.put("user", s.getUser());
             return map;
         }).collect(Collectors.toList());
     }
@@ -207,5 +210,73 @@ public class ReportServiceImpl implements ReportService {
         suppliers.addAll(paddyRepository.findDistinctSuppliers());
         suppliers.addAll(riceRepository.findDistinctSuppliers());
         return suppliers.stream().distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Object> getAllSystemData() {
+        Map<String, Object> response = new HashMap<>();
+        
+        // Paddy data grouped by type
+        Map<String, Map<String, Object>> paddyData = new HashMap<>();
+        for (PaddyStock stock : paddyRepository.findAll()) {
+            String type = stock.getPaddyType();
+            paddyData.putIfAbsent(type, new HashMap<>());
+            Map<String, Object> data = paddyData.get(type);
+            data.put("totalStock", (Integer) data.getOrDefault("totalStock", 0) + stock.getQuantity());
+            if (!data.containsKey("stocks")) data.put("stocks", new ArrayList<>());
+            ((List) data.get("stocks")).add(stock);
+        }
+        
+        for (PaddySale sale : paddySaleRepository.findAll()) {
+            String type = sale.getPaddyType();
+            paddyData.putIfAbsent(type, new HashMap<>());
+            Map<String, Object> data = paddyData.get(type);
+            data.put("totalSales", (Integer) data.getOrDefault("totalSales", 0) + sale.getQuantity());
+            data.put("totalRevenue", (Double) data.getOrDefault("totalRevenue", 0.0) + sale.getTotalamount());
+            if (!data.containsKey("sales")) data.put("sales", new ArrayList<>());
+            ((List) data.get("sales")).add(sale);
+        }
+        
+        // Rice data grouped by type
+        Map<String, Map<String, Object>> riceData = new HashMap<>();
+        for (RiceStock stock : riceRepository.findAll()) {
+            String type = stock.getRiceType();
+            riceData.putIfAbsent(type, new HashMap<>());
+            Map<String, Object> data = riceData.get(type);
+            data.put("totalStock", (Integer) data.getOrDefault("totalStock", 0) + stock.getQuantity());
+            data.put("totalBrokenRice", (Integer) data.getOrDefault("totalBrokenRice", 0) + (stock.getBrokenRiceQuantity() != null ? stock.getBrokenRiceQuantity() : 0));
+            data.put("totalPolishRice", (Integer) data.getOrDefault("totalPolishRice", 0) + (stock.getPolishRiceQuantity() != null ? stock.getPolishRiceQuantity() : 0));
+            if (!data.containsKey("stocks")) data.put("stocks", new ArrayList<>());
+            ((List) data.get("stocks")).add(stock);
+        }
+        
+        for (RiceSale sale : riceSaleRepository.findAll()) {
+            String type = sale.getRiceType();
+            riceData.putIfAbsent(type, new HashMap<>());
+            Map<String, Object> data = riceData.get(type);
+            data.put("totalSales", (Integer) data.getOrDefault("totalSales", 0) + sale.getQuantity());
+            data.put("totalRevenue", (Double) data.getOrDefault("totalRevenue", 0.0) + sale.getTotalAmount());
+            if (!data.containsKey("sales")) data.put("sales", new ArrayList<>());
+            ((List) data.get("sales")).add(sale);
+        }
+        
+        // Threshing data
+        List<PaddyThreshing> threshingData = paddyThreshingRepository.findAll();
+        
+        // Summary
+        Map<String, Object> summary = new HashMap<>();
+        summary.put("totalPaddyStock", paddyRepository.getTotalPaddyStock());
+        summary.put("totalRiceStock", riceRepository.getTotalRiceStock());
+        summary.put("totalBrokenRice", riceRepository.getTotalBrokenRiceQuantity());
+        summary.put("totalPolishRice", riceRepository.getTotalPolishRiceQuantity());
+        summary.put("totalPaddySales", paddySaleRepository.getTotalRevenue());
+        summary.put("totalRiceSales", riceSaleRepository.getTotalRevenue());
+        
+        response.put("paddyData", paddyData);
+        response.put("riceData", riceData);
+        response.put("threshingData", threshingData);
+        response.put("summary", summary);
+        
+        return response;
     }
 }

@@ -12,4 +12,5 @@ public interface ReportService {
     List<String> getRiceTypes();
     List<String> getCustomers();
     List<String> getSuppliers();
+    Map<String, Object> getAllSystemData();
 }

@@ -13,4 +13,5 @@ public interface DashboardService {
     Map<String, Object> getTotalWarehouses();
     List<ActivityDTO> getRecentActivities();
     List<LowStockAlertDTO> getLowStockAlerts();
+    Map<String, Object> getBrokenAndPolishRiceQuantity();
 }
