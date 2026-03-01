@@ -284,16 +284,6 @@ public class PaddyServiceImpl implements PaddyService {
     @Transactional
     public String addPaddyThreshing(PaddyThreshingRequest request) {
         try {
-            // Deduct paddy from paddy_stock (optional - only if stock exists)
-            Optional<PaddyStock> paddyStockOpt = paddyRepository.findFirstByPaddyTypeOrderByIdDesc(request.getPaddyType());
-            if (paddyStockOpt.isPresent()) {
-                PaddyStock paddyStock = paddyStockOpt.get();
-                if (paddyStock.getQuantity() >= request.getPaddyQuantity()) {
-                    paddyStock.setQuantity(paddyStock.getQuantity() - request.getPaddyQuantity());
-                    paddyRepository.save(paddyStock);
-                }
-            }
-
             // Add rice to rice_stock as new record
             RiceStock riceStock = new RiceStock();
             riceStock.setRiceType(request.getRiceType());
@@ -383,6 +373,7 @@ public class PaddyServiceImpl implements PaddyService {
     }
 
     @Override
+    @Transactional
     public String deletePaddyThreshing(Long id, String deleteReason) {
         try {
             Optional<PaddyThreshing> paddyThreshingOpt = paddyThreshingRepository.findById(id);
@@ -390,6 +381,16 @@ public class PaddyServiceImpl implements PaddyService {
                 return "Paddy threshing not found";
             }
             PaddyThreshing paddyThreshing = paddyThreshingOpt.get();
+            
+            // Delete corresponding rice stock created from this threshing
+            riceRepository.findAll().stream()
+                .filter(r -> r.getCustomerName().equals("Threshing") 
+                    && r.getRiceType().equals(paddyThreshing.getRiceType())
+                    && r.getQuantity() == paddyThreshing.getRiceQuantity()
+                    && r.getDate().equals(paddyThreshing.getDate())
+                    && r.getUser().equals(paddyThreshing.getUser()))
+                .findFirst()
+                .ifPresent(r -> riceRepository.deleteById(r.getId()));
             
             // Backup before delete
             PaddyThreshingBackup backup = new PaddyThreshingBackup();
