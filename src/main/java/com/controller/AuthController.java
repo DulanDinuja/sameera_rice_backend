@@ -19,40 +19,30 @@ public class AuthController {
     
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegistrationRequest request) {
-        // Validate username
-        if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+        if (request.getUsername() == null || request.getUsername().trim().isEmpty())
             return ResponseEntity.badRequest().body("Username is required");
-        }
-        
-        // Validate email
-        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+        if (request.getEmail() == null || request.getEmail().trim().isEmpty())
             return ResponseEntity.badRequest().body("Email is required");
-        }
-        
-        // Validate mobile number
-        if (request.getMobileNumber() == null || request.getMobileNumber().trim().isEmpty()) {
+        if (request.getMobileNumber() == null || request.getMobileNumber().trim().isEmpty())
             return ResponseEntity.badRequest().body("Mobile number is required");
-        }
-        
-        // Validate NIC
-        if (request.getNic() == null || request.getNic().trim().isEmpty()) {
+        if (request.getNic() == null || request.getNic().trim().isEmpty())
             return ResponseEntity.badRequest().body("NIC is required");
-        }
-        
-        // Validate password
-        if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+        if (request.getPassword() == null || request.getPassword().trim().isEmpty())
             return ResponseEntity.badRequest().body("Password is required");
-        }
-        
-        // Validate confirm password
-        if (request.getConfirmPassword() == null || request.getConfirmPassword().trim().isEmpty()) {
+        if (request.getConfirmPassword() == null || request.getConfirmPassword().trim().isEmpty())
             return ResponseEntity.badRequest().body("Confirm password is required");
-        }
-        
+
         String result = userService.registerUser(request);
-        if (result.equals("User registered successfully")) {
+        if (result.startsWith("Verification code sent"))
             return ResponseEntity.ok(result);
-        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<String> verify(@RequestParam String email, @RequestParam String code) {
+        String result = userService.verifyRegistration(email, code);
+        if (result.equals("Account verified successfully"))
+            return ResponseEntity.ok(result);
         return ResponseEntity.badRequest().body(result);
     }
 

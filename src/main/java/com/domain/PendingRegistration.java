@@ -5,9 +5,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "pending_registrations")
 @Data
-public class User {
+public class PendingRegistration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +27,18 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private boolean approved = false;
+    @Column(nullable = false)
     private String verificationCode;
+
+    @Column(nullable = false)
     private LocalDateTime verificationExpiry;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }
+

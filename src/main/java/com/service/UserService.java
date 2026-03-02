@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface UserService {
     String registerUser(RegistrationRequest request);
+    String verifyRegistration(String email, String code);
     Map<String, Object> loginUser(String username, String password);
     Map<String, Object> getUserDetails(String username);
 }
